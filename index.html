@@ -90,4 +90,16 @@ document.getElementById("checkoutBtn").onclick=()=>{closeModal("cartModal");open
 document.getElementById("year").textContent=new Date().getFullYear();
 render();
 </script>
-</body></html>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = 'https://lpqxumvzmdgosmbajzvp.supabase.co';
+const SUPABASE_KEY = 'const SUPABASE_KEY = 'sb_publishable_k3CerXzOqvUF3bQ8cQjGQg_BPaZYeiB';';
+
+const digitbaySupabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+</script>
+<body>
+</html>
