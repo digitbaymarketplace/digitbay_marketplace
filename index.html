@@ -101,5 +101,29 @@ const digitbaySupabase = window.supabase.createClient(
   SUPABASE_KEY
 );
 </script>
-<body>
+const digitbaySupabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+</script>
+  
+ <script>
+(async function () {
+  try {
+    const { data, error } = await digitbaySupabase
+      .from('products')
+      .select('id')
+      .limit(1);
+
+    if (error) {
+      console.error('DigitBay connection test failed:', error.message);
+    } else {
+      console.log('DigitBay Supabase connection successful!');
+    }
+  } catch (err) {
+    console.error('DigitBay test error:', err.message);
+  }
+})();
+  </script>
+  <body>
 </html>
