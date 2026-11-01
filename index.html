@@ -125,5 +125,52 @@ const digitbaySupabase = window.supabase.createClient(
   }
 })();
   </script>
+ <section id="account-section" style="max-width:420px;margin:40px auto;padding:25px;background:#fff;border-radius:12px;font-family:Arial;">
+  <h2>Welcome to DigitBay</h2>
+  <p>Create an account or log in to continue.</p>
+
+  <h3>Create Account</h3>
+  <input id="signup-email" type="email" placeholder="Email address" style="width:100%;padding:12px;margin:8px 0;">
+  <input id="signup-password" type="password" placeholder="Password (at least 6 characters)" style="width:100%;padding:12px;margin:8px 0;">
+  <button onclick="signUp()" style="padding:12px;width:100%;background:#2563eb;color:white;border:0;">Create Account</button>
+
+  <hr style="margin:25px 0;">
+
+  <h3>Log In</h3>
+  <input id="login-email" type="email" placeholder="Email address" style="width:100%;padding:12px;margin:8px 0;">
+  <input id="login-password" type="password" placeholder="Password" style="width:100%;padding:12px;margin:8px 0;">
+  <button onclick="logIn()" style="padding:12px;width:100%;background:#16a34a;color:white;border:0;">Log In</button>
+
+  <p id="account-message" style="margin-top:15px;"></p>
+</section>
+
+<script>
+async function signUp() {
+  const email = document.getElementById('signup-email').value;
+  const password = document.getElementById('signup-password').value;
+  const message = document.getElementById('account-message');
+
+  const { data, error } = await digitbaySupabase.auth.signUp({
+    email,
+    password
+  });
+
+  message.textContent = error ? error.message :
+    'Registration submitted. Check your email if confirmation is required.';
+}
+
+async function logIn() {
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  const message = document.getElementById('account-message');
+
+  const { data, error } = await digitbaySupabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  message.textContent = error ? error.message : 'Login successful!';
+}
+</script>
   <body>
 </html>
