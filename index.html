@@ -181,12 +181,33 @@ async function updateAccountView(session) {
       <h2>Welcome to DigitBay!</h2>
       <p id="logged-in-email"></p>
       <p>Your account is active.</p>
+      <button id="seller-mode-button">Become a Seller</button>
       <button id="logout-button">Log Out</button>
     `;
 
     document.getElementById('logged-in-email').textContent =
       session.user.email;
+document.getElementById('seller-mode-button').onclick = async () => {
+  const { data: { user } } = await digitbaySupabase.auth.getUser();
 
+  if (!user) {
+    alert('Please log in first.');
+    return;
+  }
+
+  const { error } = await digitbaySupabase
+    .from('profiles')
+    .update({ is_seller: true })
+    .eq('id', user.id);
+
+  if (error) {
+    alert('Could not activate Seller Mode: ' + error.message);
+    return;
+  }
+
+  alert('Seller Mode activated successfully!');
+  updateAccountView({ user });
+};
     document.getElementById('logout-button').onclick = async () => {
       await digitbaySupabase.auth.signOut();
     };
