@@ -167,6 +167,42 @@ async function logIn() {
 
   message.textContent = error ? error.message : 'Login successful!';
 }
+const accountSection = document.getElementById('account-section');
+
+const accountDashboard = document.createElement('section');
+accountDashboard.style.cssText = 'max-width:420px;margin:40px auto;padding:25px;background:white;border-radius:12px;';
+accountSection.insertAdjacentElement('afterend', accountDashboard);
+
+async function updateAccountView(session) {
+  if (session && session.user) {
+    accountSection.style.display = 'none';
+
+    accountDashboard.innerHTML = `
+      <h2>Welcome to DigitBay!</h2>
+      <p id="logged-in-email"></p>
+      <p>Your account is active.</p>
+      <button id="logout-button">Log Out</button>
+    `;
+
+    document.getElementById('logged-in-email').textContent =
+      session.user.email;
+
+    document.getElementById('logout-button').onclick = async () => {
+      await digitbaySupabase.auth.signOut();
+    };
+  } else {
+    accountSection.style.display = 'block';
+    accountDashboard.innerHTML = '';
+  }
+}
+
+digitbaySupabase.auth.getSession().then(({ data }) => {
+  updateAccountView(data.session);
+});
+
+digitbaySupabase.auth.onAuthStateChange((event, session) => {
+  updateAccountView(session);
+});
 </script>
   <body>
 </html>
