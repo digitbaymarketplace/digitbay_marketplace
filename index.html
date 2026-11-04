@@ -206,7 +206,7 @@ document.getElementById('seller-mode-button').onclick = async () => {
   }
 
   alert('Seller Mode activated successfully!');
-  updateAccountView({ user });
+  updateAccountView(await digitbaySupabase.auth.getSession().then(({ data }) => data.session));
 };
         const { data: sellerProfile } = await digitbaySupabase
       .from('profiles')
