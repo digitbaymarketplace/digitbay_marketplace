@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DigitBay | Seller Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --navy:#101b35;
+  --blue:#4169e1;
+  --bg:#f4f6fb;
+  --white:#fff;
+  --muted:#78839a;
+  --border:#e8ebf2;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--navy)}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:245px;background:var(--navy);color:white;padding:25px 18px;flex-shrink:0}
+.logo{font-size:25px;font-weight:800;margin:5px 10px 35px}
+.logo span{color:#7fa2ff}
+.sidebar p{font-size:11px;color:#9ca9c2;margin:25px 12px 10px;text-transform:uppercase;letter-spacing:1px}
+.nav button{display:block;width:100%;padding:14px 13px;border:0;background:transparent;color:#cbd3e4;text-align:left;border-radius:9px;margin:4px 0;cursor:pointer;font-size:14px}
+.nav button.active,.nav button:hover{background:#263653;color:white}
+.main{flex:1;min-width:0;padding:30px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:30px}
+.top h1{font-size:25px;margin:0}
+.top p{color:var(--muted);font-size:13px;margin:7px 0}
+.avatar{background:#e4ebff;color:var(--blue);padding:12px 15px;border-radius:50%;font-weight:bold}
+.welcome{background:linear-gradient(110deg,#3155bd,#6889ed);color:white;padding:27px;border-radius:15px;margin-bottom:25px}
+.welcome h2{margin:0 0 9px;font-size:22px}
+.welcome p{margin:0;color:#e4eaff}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px;margin-bottom:25px}
+.card,.panel{background:white;border:1px solid var(--border);border-radius:13px;padding:21px}
+.card small{color:var(--muted)}
+.card h2{font-size:25px;margin:12px 0 5px}
+.card p{font-size:12px;color:var(--muted);margin:0}
+.panel{margin-bottom:20px}
+.panel h3{margin:0 0 12px}
+.panel p{color:var(--muted);font-size:14px;line-height:1.6}
+.action{background:var(--blue);color:white;border:0;padding:12px 18px;border-radius:8px;cursor:pointer;font-weight:600}
+.secondary{background:#edf1ff;color:var(--blue)}
+.section{display:none}
+.section.active{display:block}
+.notice{padding:12px;background:#fff8e7;border-radius:8px;color:#805b12;font-size:13px}
+#status{padding:15px;background:white;border-radius:10px;margin-bottom:20px;color:var(--muted)}
+.mobile-menu{display:none}
+@media(max-width:800px){
+ .layout{display:block}
+ .sidebar{width:100%;padding:15px}
+ .logo{margin:0 5px 12px}
+ .sidebar p{display:none}
+ .nav{display:flex;overflow-x:auto;gap:5px}
+ .nav button{white-space:nowrap;width:auto;padding:11px}
+ .main{padding:19px}
+ .cards{grid-template-columns:1fr}
+ .top h1{font-size:21px}
+}
+</style>
+</head>
+<body>
+<div id="status">Checking your DigitBay account...</div>
+
+<div class="layout" id="dashboard" style="display:none">
+<aside class="sidebar">
+  <div class="logo">Digit<span>Bay</span></div>
+  <p>Seller workspace</p>
+  <nav class="nav">
+    <button class="active" data-section="overview">Overview</button>
+    <button data-section="products">My Products</button>
+    <button data-section="orders">My Orders</button>
+    <button data-section="wallet">Wallet</button>
+    <button data-section="withdrawals">Withdrawals</button>
+    <button data-section="settings">Settings</button>
+  </nav>
+  <p>Account</p>
+  <nav class="nav">
+    <button id="marketplace">← Customer Marketplace</button>
+    <button id="logout">Log Out</button>
+  </nav>
+</aside>
+
+<main class="main">
+  <header class="top">
+    <div>
+      <h1 id="pageTitle">Overview</h1>
+      <p>Your DigitBay seller workspace</p>
+    </div>
+    <div class="avatar" id="avatar">D</div>
+  </header>
+
+  <section class="section active" id="overview">
+    <div class="welcome">
+      <h2>Welcome to your Seller Workspace!</h2>
+      <p>Manage your digital business from one place.</p>
+    </div>
+    <div class="cards">
+      <div class="card"><small>Total Products</small><h2>—</h2><p>Your listed products</p></div>
+      <div class="card"><small>Total Sales</small><h2>—</h2><p>Your completed orders</p></div>
+      <div class="card"><small>Available Balance</small><h2>₦0.00</h2><p>Eligible earnings</p></div>
+    </div>
+    <div class="panel">
+      <h3>Your seller account</h3>
+      <p id="sellerEmail"></p>
+      <p>Your Seller Mode is active. Start organising your digital products here.</p>
+      <button class="action" data-go="products">Go to My Products</button>
+    </div>
+  </section>
+
+  <section class="section" id="products">
+    <div class="panel">
+      <h3>My Products</h3>
+      <p>Your digital products will be managed here.</p>
+      <div class="notice">Product uploads will be connected after we confirm your products table and file-storage setup.</div>
+    </div>
+  </section>
+
+  <section class="section" id="orders">
+    <div class="panel">
+      <h3>My Orders</h3>
+      <p>Your customer purchases and sales records will appear here once order processing is connected.</p>
+    </div>
+  </section>
+
+  <section class="section" id="wallet">
+    <div class="panel">
+      <h3>Wallet</h3>
+      <h2>₦0.00</h2>
+      <p>Your verified seller earnings will appear here after payment integration.</p>
+    </div>
+  </section>
+
+  <section class="section" id="withdrawals">
+    <div class="panel">
+      <h3>Withdrawals</h3>
+      <p>Minimum planned withdrawal: ₦1,000.</p>
+      <div class="notice">Withdrawal requests will be enabled after secure payment and payout integration.</div>
+    </div>
+  </section>
+
+  <section class="section" id="settings">
+    <div class="panel">
+      <h3>Seller Settings</h3>
+      <p id="settingsEmail"></p>
+      <p>Your seller account is connected to your existing DigitBay customer account.</p>
+    </div>
+  </section>
+</main>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://lpqxumvzmdgosmbajzvp.supabase.co';
+const SUPABASE_KEY = 
+const SUPABASE_KEY = 'sb_publishable_k3CerXzOqvUF3bQ8cQjGQg_BPaZYeiB';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function startDashboard(){
+  const status = document.getElementById('status');
+
+  if(SUPABASE_KEY === 'PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE'){
+    status.textContent = 'Setup needed: add your Supabase publishable key.';
+    return;
+  }
+
+  const {data:{session},error} = await db.auth.getSession();
+
+  if(error || !session){
+    status.textContent = 'Please log in to DigitBay first.';
+    return;
+  }
+
+  const {data:profile,error:profileError} = await db
+    .from('profiles')
+    .select('is_seller')
+    .eq('id',session.user.id)
+    .single();
+
+  if(profileError || !profile || profile.is_seller !== true){
+    status.textContent = 'Seller Mode is not active for this account. Please activate it from your customer account.';
+    return;
+  }
+
+  status.style.display = 'none';
+  document.getElementById('dashboard').style.display = 'flex';
+  document.getElementById('sellerEmail').textContent = session.user.email;
+  document.getElementById('settingsEmail').textContent = session.user.email;
+  document.getElementById('avatar').textContent = session.user.email.charAt(0).toUpperCase();
+
+  document.querySelectorAll('[data-section]').forEach(button=>{
+    button.addEventListener('click',()=>showSection(button.dataset.section));
+  });
+
+  document.querySelectorAll('[data-go]').forEach(button=>{
+    button.addEventListener('click',()=>showSection(button.dataset.go));
+  });
+
+  document.getElementById('marketplace').addEventListener('click',()=>{
+    window.location.href = 'index.html';
+  });
+
+  document.getElementById('logout').addEventListener('click',async()=>{
+    await db.auth.signOut();
+    window.location.href = 'index.html';
+  });
+}
+
+function showSection(name){
+  document.querySelectorAll('.section').forEach(section=>section.classList.remove('active'));
+  document.querySelectorAll('[data-section]').forEach(button=>button.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  document.querySelectorAll('[data-section="'+name+'"]').forEach(button=>button.classList.add('active'));
+  document.getElementById('pageTitle').textContent =
+    name.charAt(0).toUpperCase()+name.slice(1);
+}
+
+startDashboard();
+</script>
+</body>
+  </html>
