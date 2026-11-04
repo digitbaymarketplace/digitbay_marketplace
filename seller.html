@@ -114,6 +114,31 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--navy
       <p>Your digital products will be managed here.</p>
       <div class="notice">Product uploads will be connected after we confirm your products table and file-storage setup.</div>
     </div>
+    <div class="panel">
+  <h3>Add a New Product</h3>
+
+  <form id="product-form">
+    <label>Product Name</label>
+    <input type="text" id="product-name" required>
+
+    <label>Description</label>
+    <textarea id="product-description" required></textarea>
+
+    <label>Price</label>
+    <input type="number" id="product-price" min="0.01" step="0.01" required>
+
+    <label>Currency</label>
+    <select id="product-currency" required>
+      <option value="NGN">Nigerian Naira (₦)</option>
+      <option value="USD">US Dollar ($)</option>
+    </select>
+
+    <label>Digital Product File</label>
+    <input type="file" id="product-file" required>
+
+    <button type="submit" class="action">Add Product</button>
+  </form>
+</div>
   </section>
 
   <section class="section" id="orders">
