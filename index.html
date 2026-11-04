@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+up<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -208,6 +208,21 @@ document.getElementById('seller-mode-button').onclick = async () => {
   alert('Seller Mode activated successfully!');
   updateAccountView({ user });
 };
+        const { data: sellerProfile } = await digitbaySupabase
+      .from('profiles')
+      .select('is_seller')
+      .eq('id', session.user.id)
+      .single();
+
+    if (sellerProfile && sellerProfile.is_seller) {
+      accountDashboard.insertAdjacentHTML('beforeend', `
+        <hr>
+        <h2>Seller Dashboard</h2>
+        <h3>My Products</h3>
+        <p>Manage your digital products on DigitBay.</p>
+        <button id="my-products-button">Manage My Products</button>
+      `);
+         }
     document.getElementById('logout-button').onclick = async () => {
       await digitbaySupabase.auth.signOut();
     };
